@@ -1,0 +1,9 @@
+{
+  "name": "Tap Titans Ultimate",
+  "short_name": "Tap Titans",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0d0d1f",
+  "theme_color": "#7c4dff",
+  "icons": [{"src": "https://cdn-icons-png.flaticon.com/512/6028/6028690.png","sizes": "512x512","type": "image/png"}]
+}
