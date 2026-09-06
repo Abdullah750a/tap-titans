@@ -2,23 +2,24 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tap Titans - Abdullah</title>
+<link rel="manifest" href="manifest.json">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;touch-action: manipulation;}
-body{background:#0d0d1f;color:#fff;font-family:Arial, sans-serif;text-align:center;overflow:hidden;height:100vh;display:flex;flex-direction:column}
-.top{background:#1c1c3a;padding:12px;display:flex;justify-content:space-around;font-weight:bold;border-bottom:2px solid #7d5fff}
-.boss-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background: radial-gradient(circle, #1e1e4a 0%, #0d0d1f 100%)}
-.boss{font-size:130px;cursor:pointer;user-select:none;transition:0.05s;filter: drop-shadow(0 0 20px #7d5fff)}
+*{margin:0;padding:0;box-sizing:border-box;touch-action:manipulation}
+body{background:#0d0d1f;color:#fff;font-family:Arial;text-align:center;overflow:hidden}
+.top{background:#1c1c3a;padding:12px;display:flex;justify-content:space-around;font-weight:bold}
+.boss-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;height:55vh}
+.boss{font-size:130px;cursor:pointer;user-select:none;-webkit-user-select:none}
 .boss:active{transform:scale(0.85)}
-.hp-bar{width:85%;height:22px;background:#222;border-radius:15px;margin:12px auto;overflow:hidden;border:2px solid #444}
-.hp-fill{height:100%;background:linear-gradient(90deg,#ff4757,#ff6b81);width:100%;transition:width 0.15s}
-.btns{background:#15152e;padding:10px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;border-top:2px solid #333}
-.card{background:#24244a;padding:10px;border-radius:14px;min-width:105px;flex:1;max-width:160px;border:1px solid #3a3a6a}
+.hp-bar{width:85%;height:22px;background:#222;border-radius:10px;overflow:hidden;margin-top:15px;border:2px solid #555}
+.hp-fill{height:100%;background:linear-gradient(90deg,#ff3b3b,#ff9a00);width:100%;transition:width 0.1s}
+.btns{background:#15152e;padding:10px;display:flex;gap:8px;overflow-x:auto}
+.card{background:#24244a;padding:10px;border-radius:10px;min-width:130px;flex:1}
 .card b{font-size:14px}
-.card button{background:linear-gradient(90deg,#7d5fff,#5f27cd);color:#fff;border:none;padding:8px;border-radius:8px;margin-top:6px;width:100%;font-weight:bold}
+.card button{background:linear-gradient(90deg,#7c4dff,#4a00e0);color:#fff;border:none;padding:6px 10px;border-radius:6px;margin-top:6px;width:100%;font-weight:bold}
 .gold{color:#ffd32a;font-size:13px;margin:4px 0}
-#stage{font-size:18px;font-weight:bold;letter-spacing:1px;color:#a29bfe}
+#stage{font-size:18px;font-weight:bold;letter-spacing:1px;margin:10px}
 </style>
 </head>
 <body>
@@ -27,21 +28,17 @@ body{background:#0d0d1f;color:#fff;font-family:Arial, sans-serif;text-align:cent
 <div>👆 <span id="tapdmg">15</span> DMG</div>
 <div>⚔️ Stage <span id="level">1</span></div>
 </div>
+<div id="stage">TITAN SLAYER</div>
 <div class="boss-area">
-<div id="stage">Titan Lord</div>
-<div class="hp-bar"><div id="hpfill" class="hp-fill"></div></div>
-<div id="hptext">100 / 100</div>
-<div class="boss" id="boss" onclick="tap(event)">👹</div>
-<div style="margin-top:10px;opacity:0.7" id="dps">Hero DPS: 0</div>
+<div class="boss" id="boss" onclick="tap()">👹</div>
+<div class="hp-bar"><div class="hp-fill" id="hp"></div></div>
+<div id="hpText" style="margin-top:5px">100 / 100</div>
 </div>
 <div class="btns">
-<div class="card"><b>👆 Tap Power</b><div class="gold" id="tapCost">20 Gold</div><button onclick="buyTap()">UPGRADE</button></div>
-<div class="card"><b>🧙 Hero</b><div class="gold" id="heroCost">100 Gold</div><div style="font-size:12px" id="heroLvl">Lvl 0</div><button onclick="buyHero()">BUY</button></div>
-<div class="card"><b>⚡ Critical</b><div class="gold">200 Gold</div><button onclick="superTap()">x10 DMG</button></div>
+<div class="card"><b>Tap Power</b><div class="gold">Cost: <span id="c1">50</span></div><button onclick="buy(0)">BUY +5</button></div>
+<div class="card"><b>Warrior Hero</b><div class="gold">Cost: <span id="c2">150</span></div><div class="gold">+2/sec</div><button onclick="buy(1)">BUY</button></div>
+<div class="card"><b>Mage Hero</b><div class="gold">Cost: <span id="c3">450</span></div><div class="gold">+8/sec</div><button onclick="buy(2)">BUY</button></div>
 </div>
 <script>
-let gold=0,level=1,tapDmg=15,maxHp=120,hp=120,heroLvl=0,dps=0,tapCost=25,heroCost=120;
-const bosses=["👹","👺","👾","💀","🐲","👿","🤖","👻","🦖","👑"];
-function updateUI(){
-document.getElementById('gold').innerText=Math.floor(gold);
-document.getElementById('level').innerText=level;
+let gold=0,tapDmg=15,level=1,hp=100,maxHp=100,costs=[50,150,450],dps=[0,0,0]
+const bosses=["👹","👺","👿","💀","👾","🤖","🐲","👑
